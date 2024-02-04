@@ -1,0 +1,6 @@
+{
+    "json.schemas": [
+
+    ],
+    "python.analysis.extraPaths": ["c:/2024/virtual_envs/reflex-env/lib/site-packages"]
+}

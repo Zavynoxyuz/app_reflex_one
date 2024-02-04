@@ -1,44 +1,81 @@
-"""Welcome to Reflex! This file outlines the steps to create a basic app."""
-from rxconfig import config
+# chatapp.py
 
 import reflex as rx
+from app_reflex_one import style
+from app_reflex_one.state import State
 
-docs_url = "https://reflex.dev/docs/getting-started/introduction"
-filename = f"{config.app_name}/{config.app_name}.py"
+def qa(question: str, answer: str) -> rx.Component:
+    return rx.box(
+        rx.box(
+            rx.text(question, style=style.question_style),
+            text_align="right",
+        ),
+        rx.box(
+            rx.text(answer, style=style.answer_style),
+            text_align="left",
+        ),
+        margin_y="1em",
+    )
 
+#Anteriormente definido como:
+""" def chat() -> rx.Component:
+    qa_pairs = [
+        (
+            "What is Reflex?",
+            "A way to build web apps in pure Python!",
+        ),
+        (
+            "What can I make with it?",
+            "Anything from a simple website to a complex web app!",
+        ),
+    ]
+    return rx.box(
+        *[
+            qa(question, answer)
+            for question, answer in qa_pairs
+        ]
+    ) """
 
-class State(rx.State):
-    """The app state."""
-
-    pass
-
+#Para el chatbox
+def chat() -> rx.Component:
+    return rx.box(
+        rx.foreach(
+            State.chat_history,
+            lambda messages: qa(messages[0], messages[1]),
+        )
+    )
 
 def index() -> rx.Component:
-    return rx.fragment(
-        rx.color_mode_button(rx.color_mode_icon(), float="right"),
-        rx.vstack(
-            rx.heading("Welcome to Reflex!", font_size="2em"),
-            rx.box("Get started by editing ", rx.code(filename, font_size="1em")),
-            rx.link(
-                "Check out our docs!",
-                href=docs_url,
-                border="0.1em solid",
-                padding="0.5em",
-                border_radius="0.5em",
-                _hover={
-                    "color": rx.color_mode_cond(
-                        light="rgb(107,99,246)",
-                        dark="rgb(179, 175, 255)",
-                    )
-                },
-            ),
-            spacing="1.5em",
-            font_size="2em",
-            padding_top="10%",
-        ),
+    return rx.container(chat())
+
+#Antes
+""" def action_bar() -> rx.Component:
+    return rx.hstack(
+        rx.input(placeholder="Ask a question",style=style.input_style,),
+        
+        rx.button("Ask", style=style.button_style),
+    )
+"""
+
+#Para el chatbox
+def action_bar() -> rx.Component:
+    return rx.hstack(
+        rx.input(
+            value=State.question,
+            placeholder="Ask a question",
+            on_change=State.set_question,
+            style=style.input_style),
+        rx.button("Ask", on_click=State.answer, style=style.button_style),
+    )
+
+def index() -> rx.Component:
+    return rx.container(
+        chat(),
+        action_bar(),
     )
 
 
-# Create app instance and add index page.
+
+# Add state and page to the app.
 app = rx.App()
 app.add_page(index)

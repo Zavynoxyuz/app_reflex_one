@@ -3,56 +3,59 @@
 
 import { Fragment, useCallback, useContext } from "react"
 import { Fragment_fd0e7cb8f9fb4669a6805377d925fba0 } from "/utils/stateful_components"
-import { Box, Button, Code, Heading, Link, VStack } from "@chakra-ui/react"
-import { ColorModeContext, EventLoopContext } from "/utils/context"
-import { Event, isTrue } from "/utils/state"
-import { MoonIcon, SunIcon } from "@chakra-ui/icons"
+import { Box, Button, Container, HStack, Input, Text } from "@chakra-ui/react"
+import { EventLoopContext, StateContexts } from "/utils/context"
 import "focus-visible/dist/focus-visible"
-import NextLink from "next/link"
+import { DebounceInput } from "react-debounce-input"
+import { Event, set_val } from "/utils/state"
 import NextHead from "next/head"
 
 
 
-export function Button_5cbb2952409d1e5ed6e42602daa56ec7 () {
-  const [ colorMode, toggleColorMode ] = useContext(ColorModeContext)
+export function Button_30b920b53608c0a320eeb0f8c09e58d5 () {
   const [addEvents, connectError] = useContext(EventLoopContext);
 
-  const on_click_9922dd3e837b9e087c86a2522c2c93f8 = useCallback(toggleColorMode, [addEvents, Event, colorMode, toggleColorMode])
+  const on_click_f4ecaeca7ac4803e870637fe18cb1eea = useCallback((_e) => addEvents([Event("state.state.answer", {})], (_e), {}), [addEvents, Event])
 
   return (
-    <Button onClick={on_click_9922dd3e837b9e087c86a2522c2c93f8} sx={{"float": "right"}}>
-  <Fragment_c4944d8b5ece4892844e987a2ddfe4ae/>
+    <Button onClick={on_click_f4ecaeca7ac4803e870637fe18cb1eea} sx={{"bg": "#CEFFEE", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px"}}>
+  {`Ask`}
 </Button>
   )
 }
 
-export function Link_18676d7dddd67e44364335bc8be43dcd () {
-  const [ colorMode, toggleColorMode ] = useContext(ColorModeContext)
+export function Box_81a6c199101243465e957da78cb5b9d5 () {
+  const state__state = useContext(StateContexts.state__state)
 
 
   return (
-    <Link as={NextLink} href={`https://reflex.dev/docs/getting-started/introduction`} sx={{"border": "0.1em solid", "padding": "0.5em", "borderRadius": "0.5em", "_hover": {"color": isTrue((colorMode === "light")) ? `rgb(107,99,246)` : `rgb(179, 175, 255)`}}}>
-  {`Check out our docs!`}
-</Link>
+    <Box>
+  {state__state.chat_history.map((messages, index_37da8f5a8b24c522ad6d6132a93c2367) => (
+  <Box key={index_37da8f5a8b24c522ad6d6132a93c2367} sx={{"marginY": "1em"}}>
+  <Box sx={{"textAlign": "right"}}>
+  <Text sx={{"padding": "1em", "borderRadius": "5px", "marginY": "0.5em", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px", "maxWidth": "30em", "display": "inline-block", "bg": "#F5EFFE", "marginLeft": "20%"}}>
+  {messages.at(0)}
+</Text>
+</Box>
+  <Box sx={{"textAlign": "left"}}>
+  <Text sx={{"padding": "1em", "borderRadius": "5px", "marginY": "0.5em", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px", "maxWidth": "30em", "display": "inline-block", "bg": "#DEEAFD", "marginRight": "20%"}}>
+  {messages.at(1)}
+</Text>
+</Box>
+</Box>
+))}
+</Box>
   )
 }
 
-export function Fragment_c4944d8b5ece4892844e987a2ddfe4ae () {
-  const [ colorMode, toggleColorMode ] = useContext(ColorModeContext)
+export function Debounceinput_1764c75912cb8815d7251d2daf896920 () {
+  const state__state = useContext(StateContexts.state__state)
+  const [addEvents, connectError] = useContext(EventLoopContext);
 
+  const on_change_c1fe93b939c866e1de40fb642568d5e0 = useCallback((_e0) => addEvents([Event("state.state.set_question", {value:_e0.target.value})], (_e0), {}), [addEvents, Event])
 
   return (
-    <Fragment>
-  {isTrue((colorMode === "light")) ? (
-  <Fragment>
-  <SunIcon/>
-</Fragment>
-) : (
-  <Fragment>
-  <MoonIcon/>
-</Fragment>
-)}
-</Fragment>
+    <DebounceInput debounceTimeout={50} element={Input} onChange={on_change_c1fe93b939c866e1de40fb642568d5e0} placeholder={`Ask a question`} sx={{"borderWidth": "1px", "padding": "1em", "boxShadow": "rgba(0, 0, 0, 0.15) 0px 2px 8px"}} type={`text`} value={state__state.question}/>
   )
 }
 
@@ -61,21 +64,13 @@ export default function Component() {
   return (
     <Fragment>
   <Fragment_fd0e7cb8f9fb4669a6805377d925fba0/>
-  <Fragment>
-  <Button_5cbb2952409d1e5ed6e42602daa56ec7/>
-  <VStack spacing={`1.5em`} sx={{"fontSize": "2em", "paddingTop": "10%"}}>
-  <Heading sx={{"fontSize": "2em"}}>
-  {`Welcome to Reflex!`}
-</Heading>
-  <Box>
-  {`Get started by editing `}
-  <Code sx={{"fontSize": "1em"}}>
-  {`app_reflex_one/app_reflex_one.py`}
-</Code>
-</Box>
-  <Link_18676d7dddd67e44364335bc8be43dcd/>
-</VStack>
-</Fragment>
+  <Container>
+  <Box_81a6c199101243465e957da78cb5b9d5/>
+  <HStack>
+  <Debounceinput_1764c75912cb8815d7251d2daf896920/>
+  <Button_30b920b53608c0a320eeb0f8c09e58d5/>
+</HStack>
+</Container>
   <NextHead>
   <title>
   {`Reflex App`}
